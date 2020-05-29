@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.6.0
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    user: root
+    logging:
+      driver: "none"
+  sauce:
+    image: ipushc/sauce:latest
+    ports:
+      - 8080:80
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "3"
+

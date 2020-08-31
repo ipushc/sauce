@@ -17,13 +17,15 @@ func hello(w http.ResponseWriter, req *http.Request) {
 func main() {
 	log.SetFormatter(&log.JSONFormatter{})
 
-	http.HandleFunc("/sauce", hello)
-	_ = http.ListenAndServe(":80", nil)
+	go func() {
+		http.HandleFunc("/sauce", hello)
+		_ = http.ListenAndServe(":80", nil)
+	}()
 
 	client := redis.NewClient(&redis.Options{
-		Addr:       "sage-redis:6379",
-		DB:         1,
-		MaxRetries: 5,
+		Addr: "sage-redis:6379",
+		DB:   1,
+		// MaxRetries: 5,
 	})
 
 	pong, err := client.Ping().Result()
